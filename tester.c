@@ -1,49 +1,22 @@
 #include <curses.h>
+#include <stdlib.h>
+#include <string.h>
 
 int main()
 {
-    // top needed part 
     initscr();
-
-    // working part 
-    for (int i = 0; i < 7; ++i) addch('L');
-    for (int i = 0; i < 7; ++i) addch('R');
-
-    attron(A_NORMAL);
-    printw("Texte sans mise en forme\n");
-
-    attron(A_STANDOUT);
-    printw("Texte en meilleur surlignement\n");
-    attroff(A_STANDOUT);
-
-    attron(A_REVERSE);
-    printw("Texte en inversion video\n");
-    attroff(A_REVERSE);
-
-    attron(A_DIM);
-    printw("Texte a moitie brillant\n");
-    attroff(A_DIM);
-
-    attron(A_BOLD);
-    printw("Texte en gras\n");
-    attroff(A_BOLD);
-
-    attron(A_UNDERLINE);
-    printw("Texte en souligne\n");
-    attroff(A_UNDERLINE);
-
-    attron(A_INVIS);
-    printw("Texte invisible\n");
-    attroff(A_INVIS);
-
-    attron(A_UNDERLINE | A_BOLD); // Pour appliquer plusieurs type de mises en forme, on utilise l'opérateur unaire |
-    printw("Texte en gras souligne\n");
     
-    // end needed part 
-    refresh();
+    move(LINES - 1, COLS - 1);  // Déplace le curseur tout en bas à droite de l'écran
+    addch('.');                 // Écrit le caractère . au nouvel emplacement
+    
+    /** est équivalent à : **/
+    //mvaddch(LINES - 1, COLS - 1, '.');
+    
+    /** ou encore à : **/
+    //mvprintw(LINES - 1, COLS - 1, ".");
+
     getch();
     endwin();
-    return 0;
 }
 
 
@@ -51,4 +24,11 @@ int main()
 // cd "/Users/jeandtx/Documents/Projet-Rubikscube/" && gcc -lcurses tester.c -o tester && "/Users/jeandtx/Documents/Projet-Rubikscube/"tester
 
 // To run for Oscar:
-// cd "/home/oscar/Documents/Efrei/c_tries/Projet-Rubikscube/" && gcc -lcurses tester.c -o main && "/home/oscar/Documents/Efrei/c_tries/Projet-Rubikscube/"main
+// cd "/home/oscar/Documents/Efrei/c_tries/Projet-Rubikscube/" && gcc -lcurses tester.c -o tester && "/home/oscar/Documents/Efrei/c_tries/Projet-Rubikscube/"tester
+
+
+
+// for (i=0; i<3; i++){
+//         char *a = get_char_color(cube[1][i][1]);
+//         mvprintw(startX + i, startY, a);
+//     }

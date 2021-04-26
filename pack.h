@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <curses.h>
 
 typedef enum{ 
     FRONT, 
@@ -11,11 +12,11 @@ typedef enum{
 }T_SIDE;
 
 typedef enum{
-    R,
-    B,
     G,
+    B,
     W,
     Y,
+    R,
     O,
     LG
 }T_COLOR;
@@ -44,7 +45,7 @@ T_COLOR **create_2d_array(){
 T_COLOR ***create_rubiks(){
     T_COLOR ***cube;
     cube = (T_COLOR***) calloc(6, sizeof(T_COLOR***));
-    for (T_COLOR i = 0; i < 6; i++){
+    for (int i = 0; i < 6; i++){
         cube[i] = (T_COLOR**) create_2d_array();
     }
     return cube;
@@ -61,6 +62,7 @@ void init_rubiks(T_COLOR ***cube){
 }
 
 char *get_char_color(T_COLOR input){
+    // gets a T_COLOR type input, returns it as a character
     if (input == R){
         return "R";
     }
@@ -88,16 +90,43 @@ char *get_char_color(T_COLOR input){
     }
 }
 
+
 void display_rubiks(T_COLOR ***cube){
-    for (int i = 0; i < 6; i++){
-        for (int j = 0; j < 3; j++){
-            printf("\n");
-            for (int k = 0; k < 3; k++){
-                printf("%s", get_char_color(cube[i][j][k]));
+
+    initscr();
+    start_color();
+    int iX = 4, iY = 6, cx = 5, cy = 4;
+    
+    int position_by_side[10][5] = {
+        {iX+1*cx, iY}, // FRONT <- GREEN
+        {iX+3*cx, iY}, // BACK <- BLUE
+        {iX+1*cx, iY-1*cy}, // UP <- WHITE
+        {iX+1*cx, iY+1*cy}, // DOWN <- YELLOW 
+        {iX+2*cx, iY}, // RIGHT <- RED
+        {iX, iY} // LEFT <- ORANGE
+    };
+
+    T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT };
+
+    // We choose the side to display in a variable
+    for (int k = 0; k < 6; k++){
+        T_SIDE side = list_of_sides[k];
+        // Then we can display that side
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                char *a = get_char_color(cube[select_side(side)][i][j]);
+                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j, a);
             }
         }
-        printf("\n");
     }
+
+    // refreshes the screen to match what's in memory 
+    refresh();
+    
+    getch();
+
+    // what's for user input, returns 
+    endwin();
 }
 
 void blank_rubiks(T_COLOR ***cube){
@@ -111,5 +140,20 @@ void blank_rubiks(T_COLOR ***cube){
 }
 
 void fill_rubiks(T_COLOR ***cube){
+
+}
+
+void scramble_rubiks(T_COLOR ***cube){
     
 }
+
+void free_rubiks(T_COLOR ***cube){
+    for (int i = 0; i < 6; i++){
+        for (int j = 0; j < 3; j++){
+            free(cube[i][j]);
+        }
+        free(cube[i]);
+    }
+    free(cube);
+}
+
