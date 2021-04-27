@@ -7,8 +7,8 @@ int main(){
     T_COLOR ***cube;
     cube = create_rubiks();
     init_rubiks(cube);
+    blank_rubiks(cube);
     display_rubiks(cube);
-    // printf("%d\n", select_color((T_COLOR) G));
     return 0;
 }
 

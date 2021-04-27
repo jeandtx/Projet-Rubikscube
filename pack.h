@@ -100,6 +100,7 @@ void display_rubiks(T_COLOR ***cube){
     init_pair(4, COLOR_YELLOW, COLOR_BLACK);
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
     int iX = 4, iY = 6, cx = 5, cy = 4;
     
     int position_by_side[10][5] = {
@@ -124,12 +125,9 @@ void display_rubiks(T_COLOR ***cube){
             }
         }
     }
-
     // refreshes the screen to match what's in memory 
     refresh();
-    
     getch();
-
     // what's for user input, returns 
     endwin();
 }
