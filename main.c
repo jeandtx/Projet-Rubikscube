@@ -7,8 +7,7 @@ int main(){
     T_COLOR ***cube;
     cube = create_rubiks();
     init_rubiks(cube);
-    blank_rubiks(cube);
-    display_rubiks(cube);
+    user_interface(cube, 'o');
     return 0;
 }
 

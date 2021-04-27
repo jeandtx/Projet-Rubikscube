@@ -91,7 +91,7 @@ char *get_char_color(T_COLOR input){
 }
 
 void display_rubiks(T_COLOR ***cube){
-
+    clear();
     initscr();
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
@@ -101,7 +101,7 @@ void display_rubiks(T_COLOR ***cube){
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
-    int iX = 4, iY = 6, cx = 5, cy = 4;
+    int iX = LINES/10, iY = COLS/25, cx = 5, cy = 4;
     
     int position_by_side[10][5] = {
         {iX+1*cx, iY}, // FRONT <- GREEN
@@ -142,10 +142,6 @@ void blank_rubiks(T_COLOR ***cube){
     }
 }
 
-void fill_rubiks(T_COLOR ***cube){
-
-}
-
 void scramble_rubiks(T_COLOR ***cube){
     
 }
@@ -160,3 +156,32 @@ void free_rubiks(T_COLOR ***cube){
     free(cube);
 }
 
+void user_interface(T_COLOR ***cube, int a){
+    clear();
+    initscr();
+    
+    int iX = 0, iY = 1;
+    mvprintw(iY, iX, "What Do You Want TO DO: ");
+    mvprintw(iY + 3, iX, "1: Scramble\t2: Reset\t3: Blank\t 5: Fill\t6: Display\t7: Quit");
+    mvprintw(iY + 6, iX, "OUTPUT : ");
+    // refreshes the screen to match what's in memory 
+    refresh();
+
+    switch (a){
+        case '7':
+            // could create a function for a good bye screen
+            endwin();
+            break;
+        case '6':
+            display_rubiks(cube);
+            fill_rubiks(cube, getch());
+            break;
+        case '3':
+            blank_rubiks(cube);
+        
+        default:
+            fill_rubiks(cube, getch());
+            break;
+    }
+    
+}
