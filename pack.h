@@ -90,11 +90,16 @@ char *get_char_color(T_COLOR input){
     }
 }
 
-
 void display_rubiks(T_COLOR ***cube){
 
     initscr();
     start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_BLUE, COLOR_BLACK);
+    init_pair(3, COLOR_WHITE, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
     int iX = 4, iY = 6, cx = 5, cy = 4;
     
     int position_by_side[10][5] = {
@@ -107,13 +112,6 @@ void display_rubiks(T_COLOR ***cube){
     };
 
     T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT };
-    init_pair(0, COLOR_RED, COLOR_BLACK);
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
-    init_pair(2, COLOR_BLUE, COLOR_BLACK);
-    init_pair(3, COLOR_WHITE, COLOR_BLACK);
-    init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(5, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(6, COLOR_RED, COLOR_BLACK);
     // We choose the side to display in a variable
     for (int k = 0; k < 6; k++){
         T_SIDE side = list_of_sides[k];
@@ -121,7 +119,7 @@ void display_rubiks(T_COLOR ***cube){
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
                 char *a = get_char_color(cube[select_side(side)][i][j]);
-                attron(COLOR_PAIR(k));
+                attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
                 mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j, a);
             }
         }
