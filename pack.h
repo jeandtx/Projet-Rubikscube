@@ -174,13 +174,13 @@ void user_interface(T_COLOR ***cube, int a){
             break;
         case '6':
             display_rubiks(cube);
-            fill_rubiks(cube, getch());
+            user_interface(cube, getch());
             break;
         case '3':
             blank_rubiks(cube);
         
         default:
-            fill_rubiks(cube, getch());
+            user_interface(cube, getch());
             break;
     }
     
