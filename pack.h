@@ -97,30 +97,7 @@ char select_sides(T_SIDE side){
     }
     return 'e';
 }
-//
-// void turn_line(T_COLOR ***cube, int line){
-//     for (int i = 0; i < 3; i++){
-//         for (int j = 0; j < 5; j++){
-//             if (!(j == 3 ||j == 2)){
-//
-//                 T_COLOR mem = cube[j][line][i];
-//                 cube[j][line][i] = cube[j+1][line][i];
-//                 cube[j+1][line][i] = mem;
-//             }
-//         }
-//     }
-// }
-//
-// void turn_top(T_COLOR ***cube, T_SIDE side){
-//     1 get to cube side
-    
 
-//     2 get cube side values in third-party create_2d_array
-    
-    
-//     3 fill new cube side with values IN THE RIGHT PLACES
-
-// }
 
 char *get_char_color(T_COLOR input){
     // gets a T_COLOR type input, returns it as a character

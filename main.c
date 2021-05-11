@@ -12,7 +12,6 @@ int main(){
 }
 
 
-
 /*
 To run for jean:
 cd "/Users/jeandtx/Documents/Projet-Rubikscube/" && gcc -lcurses main.c -o main && "/Users/jeandtx/Documents/Projet-Rubikscube/"main
