@@ -180,40 +180,34 @@ void turn_face_and_line(T_COLOR ***cube, int number_of_turns){
 }
 
 void vertical_rotation(T_COLOR ***cube){
+    for (int i=0; i<3; i++){pivot_face(cube, LEFT);}
+    pivot_face(cube, RIGHT);
+    
     T_COLOR **storage_side;
     storage_side = create_2d_array(3);
 
-    // typedef enum{ 
-    // FRONT, // 0
-    // BACK, // 1
-    // UP, // 2
-    // DOWN, // 3 
-    // RIGHT, // 4 
-    // LEFT // 5
-    // }T_SIDE;
-
-    int list_of_sides[5] = {2, 0, 3, 1, 2};
-    // we store the side UP
+    int list_of_sides[5] = {2, 0, 3, 1};
+    
+    // we store the first side
     for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
             storage_side[j][k] = cube[list_of_sides[0]][j][k];
         }
     }
-    // we put FRONT inside UP, and then DOWN inside FRONT
-    for (int side; side < 2; side++){
+    // we transfer each side in the previous one
+    for(int side = 0; side < 3; side++){
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
                 cube[list_of_sides[side]][j][k] = cube[list_of_sides[side+1]][j][k];
             }
         }
     }
-    // we put inverted BACK inside DOWN, and then inverted stored UP inside BACK
+    // we transfer the last side from the storage
     for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
-            cube[list_of_sides[3]][j][k] = storage_side[j][k];
+            cube[list_of_sides[3]][j][k] = storage_side[2-j][k];
         }
     }
-
 }
 
 void horizontal_rotation(T_COLOR ***cube){
@@ -241,8 +235,20 @@ void horizontal_rotation(T_COLOR ***cube){
     // we transfer the last side from the storage
     for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
-            cube[list_of_sides[3]][j][k] = storage_side[j][k];
+            cube[list_of_sides[3]][j][k] = storage_side[2-j][k];
         }
+    }
+}
+
+void scramble(T_COLOR ***cube){
+    time_t t;
+    srand((unsigned) time(&t));
+    int k = rand()%8 + 4;
+
+    for (int i; i < k; i++){
+        vertical_rotation(cube);
+        pivot_face(cube, FRONT);
+        horizontal_rotation(cube);
     }
 }
 
@@ -282,15 +288,18 @@ void display_rubiks(T_COLOR ***cube, int a){
         }
     }
     x += 30;
-    y -= 2;
+    y -= 3;
     attron(COLOR_PAIR(3));
-    mvprintw(y+0, x,    "@-------------------------------------------------------------------------@");
-    mvprintw(y+1, x,    "(                       What Do You Want to do ??????????                 )");
-    mvprintw(y+2, x,    "(                                                                         )");
-    mvprintw(y+3, x,    "(             s: Scramble        b: Blank        f: Fill                  )");
-    mvprintw(y+4, x,    "(             q: Quit            r: Reset        t: pivot front face      )");
-    mvprintw(y+5, x,    "(             turn cube :        s: Horizontaly  v: Verticaly             )");
-    mvprintw(y+6, x,    "@-------------------------------------------------------------------------@");
+    mvprintw(y-1, x,    " __________________________________________________________________________");
+    mvprintw(y+0, x,    "@                                                                          @");
+    mvprintw(y+1, x,    "︴                      What Do You Want to do ??????????                  ︴");
+    mvprintw(y+2, x,    "︴                                                                         ︴");
+    mvprintw(y+3, x,    "︴             s: Scramble        b: Blank        f: Fill                  ︴");
+    mvprintw(y+4, x,    "︴             q: Quit            r: Reset        t: pivot front face      ︴");
+    mvprintw(y+5, x,    "︴             turn cube :        h: Horizontaly  v: Verticaly             ︴");
+    mvprintw(y+6, x,    "︴                                                                         ︴");
+    mvprintw(y+7, x,    "︴                 press enter after choosing the wright cmd               ︴");
+    mvprintw(y+8, x,    "@__________________________________________________________________________@");
     switch (a){
         case 'r':
             init_rubiks(cube);
@@ -305,11 +314,14 @@ void display_rubiks(T_COLOR ***cube, int a){
         case 't':
             turn_face_and_line(cube, 1);
             display_rubiks(cube, getch());
-        case 's':
+        case 'h':
             horizontal_rotation(cube);
             display_rubiks(cube, getch());
         case 'v':
             vertical_rotation(cube);
+            display_rubiks(cube, getch());
+        case 's':
+            scramble(cube);
             display_rubiks(cube, getch());
         default:
             display_rubiks(cube, getch());
