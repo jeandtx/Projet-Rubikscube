@@ -62,62 +62,17 @@ void init_rubiks(T_COLOR ***cube){
     }
 }
 
-char select_sides(T_SIDE side){
-    int a = select_side(side);
-    T_SIDE *sds;
-    sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
-    switch (a){
-        // ORDRE: {UP, RIGHT, DOWN, LEFT}
-        case 0: //COLOR NAME
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            return *sds;
-            break;
-        case 1:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-            return *sds;
-            break;
-        case 2:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-            return *sds;
-            break;
-        case 3:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            return *sds;
-            break;
-        case 4:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            return *sds;
-            break;
-        case 5:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            return *sds;
-            break;
-
-        default:
-            break;
-    }
-    return 'e';
-}
-
 char *get_char_color(T_COLOR input){
     // gets a T_COLOR type input, returns it as a character
     if (input == R){
         return "R ";}
-    else if (input == B){
-        return "B ";}
-    else if (input == G){
-        return "G ";}
-    else if (input == W){
-        return "W ";}
-    else if (input == Y){
-        return "Y ";}
-    else if (input == O){
-        return "O ";}
-    else if (input == LG){
-        return "\\";}
-    else{
-        printf("\nerror in function get_char_color\n\n");
-        return "a";}
+    else if (input == B){return "B ";}
+    else if (input == G){return "G ";}
+    else if (input == W){return "W ";}
+    else if (input == Y){return "Y ";}
+    else if (input == O){return "O ";}
+    else if (input == LG){return "\\";}
+    else{printf("\nerror in function get_char_color\n\n");return "a";}
 }
 
 void blank_rubiks(T_COLOR ***cube){
@@ -140,134 +95,154 @@ void free_rubiks(T_COLOR ***cube){
     free(cube);
 }
 
-void turn_top(T_COLOR ***cube, T_SIDE side){
-    int sd = select_side(side);
-
-    T_COLOR **old_values;
-    old_values = create_2d_array(4);
+void pivot_face(T_COLOR ***cube, T_SIDE side){
+    
+    T_COLOR **old_val;
+    old_val = create_2d_array(4);
 
     // capturing old values, hard code
 
-    old_values[0][0] = cube[sd][0][0];
-    old_values[0][1] = cube[sd][0][1];
-    old_values[0][2] = cube[sd][0][2];
+    old_val[0][0] = cube[side][0][0];
+    old_val[0][1] = cube[side][0][1];
+    old_val[0][2] = cube[side][0][2];
 
-    old_values[1][0] = cube[sd][1][0];
-    old_values[1][1] = cube[sd][1][1];
-    old_values[1][2] = cube[sd][1][2];
+    old_val[1][0] = cube[side][1][0];
+    old_val[1][1] = cube[side][1][1];
+    old_val[1][2] = cube[side][1][2];
 
-    old_values[2][0] = cube[sd][2][0];
-    old_values[2][1] = cube[sd][2][1];
-    old_values[2][2] = cube[sd][2][2];
+    old_val[2][0] = cube[side][2][0];
+    old_val[2][1] = cube[side][2][1];
+    old_val[2][2] = cube[side][2][2];
 
     // placements, hard code
 
-    cube[sd][0][0] = old_values[2][0];
-    cube[sd][0][1] = old_values[1][0];
-    cube[sd][0][2] = old_values[0][0];
+    cube[side][0][0] = old_val[2][0];
+    cube[side][0][1] = old_val[1][0];
+    cube[side][0][2] = old_val[0][0];
 
-    cube[sd][1][0] = old_values[2][1];
-    cube[sd][1][1] = old_values[1][1];
-    cube[sd][1][2] = old_values[0][1];
+    cube[side][1][0] = old_val[2][1];
+    cube[side][1][1] = old_val[1][1];
+    cube[side][1][2] = old_val[0][1];
 
-    cube[sd][2][0] = old_values[2][2];
-    cube[sd][2][1] = old_values[1][2];
-    cube[sd][2][2] = old_values[0][2];
+    cube[side][2][0] = old_val[2][2];
+    cube[side][2][1] = old_val[1][2];
+    cube[side][2][2] = old_val[0][2];
 }
 
-void turn_line(T_COLOR ***cube, T_SIDE side){
+void turn_line(T_COLOR ***cube){
 
-    int a = select_side(side);
-    T_SIDE *sds;
-    sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
-    switch (a){
-        // ORDRE: {UP, RIGHT, DOWN, LEFT}
-        case 0: // OK
-            sds[0] = (T_SIDE) UP; 
-            sds[1] = (T_SIDE) RIGHT; 
-            sds[2] = (T_SIDE) DOWN; 
-            sds[3] = (T_SIDE) LEFT;
-            break;
-        case 1: // NO OK
-            sds[0] = (T_SIDE) UP;
-            sds[1] = (T_SIDE) LEFT; 
-            sds[2] = (T_SIDE) DOWN; 
-            sds[3] = (T_SIDE) RIGHT;
-            break;
-        case 2: // NO OK
-            sds[0] = (T_SIDE) UP;
-            sds[1] = (T_SIDE) LEFT; 
-            sds[2] = (T_SIDE) DOWN; 
-            sds[3] = (T_SIDE) RIGHT;
-            break;
-        case 3: // NO OK
-            sds[0] = (T_SIDE) LEFT;
-            sds[1] = (T_SIDE) FRONT;
-            sds[2] = (T_SIDE) RIGHT;
-            sds[3] = (T_SIDE) BACK;
-            break;
-        case 4: // OK
-            sds[0] = (T_SIDE) UP;
-            sds[1] = (T_SIDE) BACK;
-            sds[2] = (T_SIDE) DOWN;
-            sds[3] = (T_SIDE) FRONT;
-            break;
-        case 5: // OK
-            sds[0] = (T_SIDE) UP;
-            sds[1] = (T_SIDE) BACK;
-            sds[2] = (T_SIDE) DOWN;
-            sds[3] = (T_SIDE) FRONT;
-            break;
-
-        default:
-            break;
-    }
-
-    T_COLOR **old_values;
-    old_values = create_2d_array(4);
+    T_COLOR **old_val;
+    old_val = create_2d_array(4);
 
     // getting the cube's values
 
-    old_values[0][0] = cube[sds[0]][0][0];
-    old_values[0][1] = cube[sds[0]][0][1];
-    old_values[0][2] = cube[sds[0]][0][2];
+    old_val[0][0] = cube[UP][0][0];
+    old_val[0][1] = cube[UP][0][1];
+    old_val[0][2] = cube[UP][0][2];
     
-    old_values[1][0] = cube[sds[1]][0][1];
-    old_values[1][1] = cube[sds[1]][1][1];
-    old_values[1][2] = cube[sds[1]][2][1];
+    old_val[1][0] = cube[RIGHT][0][1];
+    old_val[1][1] = cube[RIGHT][1][1];
+    old_val[1][2] = cube[RIGHT][2][1];
     
-    old_values[2][0] = cube[sds[2]][2][0];
-    old_values[2][1] = cube[sds[2]][2][1];
-    old_values[2][2] = cube[sds[2]][2][2];
+    old_val[2][0] = cube[DOWN][2][0];
+    old_val[2][1] = cube[DOWN][2][1];
+    old_val[2][2] = cube[DOWN][2][2];
 
-    old_values[3][0] = cube[sds[3]][2][0];
-    old_values[3][1] = cube[sds[3]][2][1];
-    old_values[3][2] = cube[sds[3]][2][2];
+    old_val[3][0] = cube[LEFT][2][0];
+    old_val[3][1] = cube[LEFT][2][1];
+    old_val[3][2] = cube[LEFT][2][2];
 
     // placements
 
-    cube[sds[0]][2][0]  =   old_values[3][2];
-    cube[sds[0]][2][1]  =   old_values[3][1];
-    cube[sds[0]][2][2]  =   old_values[3][0];
+    cube[UP][2][0]    = old_val[3][2];
+    cube[UP][2][1]    = old_val[3][1];
+    cube[UP][2][2]    = old_val[3][0];
 
-    cube[sds[1]][0][0]  =   old_values[0][0];
-    cube[sds[1]][1][0]  =   old_values[0][1];
-    cube[sds[1]][2][0]  =   old_values[0][2];
+    cube[RIGHT][0][0] = old_val[0][0];
+    cube[RIGHT][1][0] = old_val[0][1];
+    cube[RIGHT][2][0] = old_val[0][2];
 
-    cube[sds[2]][0][0]  =   old_values[1][2];
-    cube[sds[2]][0][1]  =   old_values[1][1];
-    cube[sds[2]][0][2]  =   old_values[1][0];
+    cube[DOWN][0][0]  = old_val[1][2];
+    cube[DOWN][0][1]  = old_val[1][1];
+    cube[DOWN][0][2]  = old_val[1][0];
 
-    cube[sds[3]][0][2]  =   old_values[2][0];
-    cube[sds[3]][1][2]  =   old_values[2][1];
-    cube[sds[3]][2][2]  =   old_values[2][2];
+    cube[LEFT][0][2]  = old_val[2][0];
+    cube[LEFT][1][2]  = old_val[2][1];
+    cube[LEFT][2][2]  = old_val[2][2];
 
 }
 
-void turn_face(T_COLOR ***cube, int number_of_turns, T_SIDE side){
+void turn_face_and_line(T_COLOR ***cube, int number_of_turns){
     for (int i = 0; i < number_of_turns; i++){
-        turn_line(cube, side);
-        turn_top(cube, side);
+        turn_line(cube);
+        pivot_face(cube, FRONT);
+    }
+}
+
+void vertical_rotation(T_COLOR ***cube){
+    T_COLOR **storage_side;
+    storage_side = create_2d_array(3);
+
+    // typedef enum{ 
+    // FRONT, // 0
+    // BACK, // 1
+    // UP, // 2
+    // DOWN, // 3 
+    // RIGHT, // 4 
+    // LEFT // 5
+    // }T_SIDE;
+
+    int list_of_sides[5] = {2, 0, 3, 1, 2};
+    // we store the side UP
+    for (int j = 0; j < 3; j++){
+        for (int k = 0; k < 3; k++){
+            storage_side[j][k] = cube[list_of_sides[0]][j][k];
+        }
+    }
+    // we put FRONT inside UP, and then DOWN inside FRONT
+    for (int side; side < 2; side++){
+        for (int j = 0; j < 3; j++){
+            for (int k = 0; k < 3; k++){
+                cube[list_of_sides[side]][j][k] = cube[list_of_sides[side+1]][j][k];
+            }
+        }
+    }
+    // we put inverted BACK inside DOWN, and then inverted stored UP inside BACK
+    for (int j = 0; j < 3; j++){
+        for (int k = 0; k < 3; k++){
+            cube[list_of_sides[3]][j][k] = storage_side[j][k];
+        }
+    }
+
+}
+
+void horizontal_rotation(T_COLOR ***cube){
+    T_COLOR **storage_side;
+    storage_side = create_2d_array(3);
+
+    for (int i=0; i<3; i++){pivot_face(cube, UP);}
+    pivot_face(cube, DOWN);
+
+    int list_of_sides[5] = {5, 1, 4, 0};
+    // we store the first side
+    for (int j = 0; j < 3; j++){
+        for (int k = 0; k < 3; k++){
+            storage_side[j][k] = cube[list_of_sides[0]][j][k];
+        }
+    }
+    // we transfer each side in the previous one
+    for(int side = 0; side < 3; side++){
+        for (int j = 0; j < 3; j++){
+            for (int k = 0; k < 3; k++){
+                cube[list_of_sides[side]][j][k] = cube[list_of_sides[side+1]][j][k];
+            }
+        }
+    }
+    // we transfer the last side from the storage
+    for (int j = 0; j < 3; j++){
+        for (int k = 0; k < 3; k++){
+            cube[list_of_sides[3]][j][k] = storage_side[j][k];
+        }
     }
 }
 
@@ -282,15 +257,15 @@ void display_rubiks(T_COLOR ***cube, int a){
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
     init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
-    int iX = LINES/10, iY = COLS/25, cx = 7, cy = 4;
+    int x = LINES/10, y = COLS/25, cx = 7, cy = 4;
     
     int position_by_side[10][5] = {
-        {iX+1*cx, iY}, // FRONT <- GREEN
-        {iX+3*cx, iY}, // BACK <- BLUE
-        {iX+1*cx, iY-1*cy}, // UP <- WHITE
-        {iX+1*cx, iY+1*cy}, // DOWN <- YELLOW 
-        {iX+2*cx, iY}, // RIGHT <- RED
-        {iX, iY} // LEFT <- ORANGE
+        {x+1*cx, y}, // FRONT <- GREEN
+        {x+3*cx, y}, // BACK <- BLUE
+        {x+1*cx, y-1*cy}, // UP <- WHITE
+        {x+1*cx, y+1*cy}, // DOWN <- YELLOW 
+        {x+2*cx, y}, // RIGHT <- RED
+        {x, y} // LEFT <- ORANGE
     };
 
     T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT};
@@ -306,15 +281,16 @@ void display_rubiks(T_COLOR ***cube, int a){
             }
         }
     }
-    iX += 30;
-    iY -= 2;
+    x += 30;
+    y -= 2;
     attron(COLOR_PAIR(3));
-    mvprintw(iY+0, iX,    "@-------------------------------------------------------------------------@");
-    mvprintw(iY+1, iX,    "(                       What Do You Want to do ??????????                 )");
-    mvprintw(iY+2, iX,    "(                                                                         )");
-    mvprintw(iY+3, iX,    "(             s: Scramble        b: Blank        f: Fill                  )");
-    mvprintw(iY+4, iX,    "(             q: Quit            r: Reset        t: turn face             )");
-    mvprintw(iY+5, iX,    "@-------------------------------------------------------------------------@");
+    mvprintw(y+0, x,    "@-------------------------------------------------------------------------@");
+    mvprintw(y+1, x,    "(                       What Do You Want to do ??????????                 )");
+    mvprintw(y+2, x,    "(                                                                         )");
+    mvprintw(y+3, x,    "(             s: Scramble        b: Blank        f: Fill                  )");
+    mvprintw(y+4, x,    "(             q: Quit            r: Reset        t: pivot front face      )");
+    mvprintw(y+5, x,    "(             turn cube :        s: Horizontaly  v: Verticaly             )");
+    mvprintw(y+6, x,    "@-------------------------------------------------------------------------@");
     switch (a){
         case 'r':
             init_rubiks(cube);
@@ -322,18 +298,18 @@ void display_rubiks(T_COLOR ***cube, int a){
         case 'b':
             blank_rubiks(cube);
             display_rubiks(cube, getch());
-        case 'd':
-            display_rubiks(cube, getch());
         case 'q':
             free_rubiks(cube);
             endwin();
             break;
         case 't':
-            turn_face(cube, 1, FRONT);
+            turn_face_and_line(cube, 1);
             display_rubiks(cube, getch());
-            // turn_interface_1(cube, 'o')
-        case 'h':
-            turn_face(cube, 1, RIGHT);
+        case 's':
+            horizontal_rotation(cube);
+            display_rubiks(cube, getch());
+        case 'v':
+            vertical_rotation(cube);
             display_rubiks(cube, getch());
         default:
             display_rubiks(cube, getch());
