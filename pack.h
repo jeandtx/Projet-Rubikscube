@@ -120,48 +120,6 @@ char *get_char_color(T_COLOR input){
         return "a";}
 }
 
-void display_rubiks(T_COLOR ***cube){
-    clear();
-    initscr();
-    start_color();
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
-    init_pair(2, COLOR_BLUE, COLOR_BLACK);
-    init_pair(3, COLOR_WHITE, COLOR_BLACK);
-    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(5, COLOR_RED, COLOR_BLACK);
-    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
-    int iX = LINES/10, iY = COLS/25, cx = 7, cy = 4;
-    
-    int position_by_side[10][5] = {
-        {iX+1*cx, iY}, // FRONT <- GREEN
-        {iX+3*cx, iY}, // BACK <- BLUE
-        {iX+1*cx, iY-1*cy}, // UP <- WHITE
-        {iX+1*cx, iY+1*cy}, // DOWN <- YELLOW 
-        {iX+2*cx, iY}, // RIGHT <- RED
-        {iX, iY} // LEFT <- ORANGE
-    };
-
-    T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT};
-    // We choose the side to display in a variable
-    for (int k = 0; k < 6; k++){
-        T_SIDE side = list_of_sides[k];
-        // Then we can display that side
-        for (int i = 0; i < 3; i++){
-            for (int j = 0; j < 3; j++){
-                char *a = get_char_color(cube[select_side(side)][i][j]);
-                attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
-                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j*2, a);
-            }
-        }
-    }
-    // refreshes the screen to match what's in memory 
-    refresh();
-    getch();
-    // what's for user input, returns 
-    endwin();
-}
-
 void blank_rubiks(T_COLOR ***cube){
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
@@ -183,7 +141,7 @@ void free_rubiks(T_COLOR ***cube){
 }
 
 void turn_top(T_COLOR ***cube, T_SIDE side){
-    int sd = select_sides(side);
+    int sd = select_side(side);
 
     T_COLOR **old_values;
     old_values = create_2d_array(4);
@@ -225,22 +183,40 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     switch (a){
         // ORDRE: {UP, RIGHT, DOWN, LEFT}
         case 0: // OK
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+            sds[0] = (T_SIDE) UP; 
+            sds[1] = (T_SIDE) RIGHT; 
+            sds[2] = (T_SIDE) DOWN; 
+            sds[3] = (T_SIDE) LEFT;
             break;
         case 1: // NO OK
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+            sds[0] = (T_SIDE) UP;
+            sds[1] = (T_SIDE) LEFT; 
+            sds[2] = (T_SIDE) DOWN; 
+            sds[3] = (T_SIDE) RIGHT;
             break;
         case 2: // NO OK
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+            sds[0] = (T_SIDE) UP;
+            sds[1] = (T_SIDE) LEFT; 
+            sds[2] = (T_SIDE) DOWN; 
+            sds[3] = (T_SIDE) RIGHT;
             break;
         case 3: // NO OK
-            sds[0] = (T_SIDE) LEFT; sds[1] = (T_SIDE) FRONT; sds[2] = (T_SIDE) RIGHT; sds[3] = (T_SIDE) BACK;
+            sds[0] = (T_SIDE) LEFT;
+            sds[1] = (T_SIDE) FRONT;
+            sds[2] = (T_SIDE) RIGHT;
+            sds[3] = (T_SIDE) BACK;
             break;
         case 4: // OK
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) BACK; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) FRONT;
+            sds[0] = (T_SIDE) UP;
+            sds[1] = (T_SIDE) BACK;
+            sds[2] = (T_SIDE) DOWN;
+            sds[3] = (T_SIDE) FRONT;
             break;
         case 5: // OK
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) BACK; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) FRONT;
+            sds[0] = (T_SIDE) UP;
+            sds[1] = (T_SIDE) BACK;
+            sds[2] = (T_SIDE) DOWN;
+            sds[3] = (T_SIDE) FRONT;
             break;
 
         default:
@@ -291,120 +267,80 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
 void turn_face(T_COLOR ***cube, int number_of_turns, T_SIDE side){
     for (int i = 0; i < number_of_turns; i++){
         turn_line(cube, side);
-        // turn_top(cube, side);
+        turn_top(cube, side);
     }
 }
 
-// ################################################################################################################
-// ####################################_____######______###########################################################
-// ################################################################################################################
-// ######################################O##########O##############################################################
-// ###########################oo##############################oo###################################################
-// ###########################oo############___###############oo##################################################
-// ################################################################################################################
-// ################################################################################################################
-// #####################################--------------#############################################################
-// ################################################################################################################
-// ################################################################################################################
-
-
-void turn_interface_2(T_COLOR ***cube, char choice, char face){
+void display_rubiks(T_COLOR ***cube, int a){
+    clear();
+    initscr();
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_BLUE, COLOR_BLACK);
+    init_pair(3, COLOR_WHITE, COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
+    int iX = LINES/10, iY = COLS/25, cx = 7, cy = 4;
     
-    clear();
-    initscr();
+    int position_by_side[10][5] = {
+        {iX+1*cx, iY}, // FRONT <- GREEN
+        {iX+3*cx, iY}, // BACK <- BLUE
+        {iX+1*cx, iY-1*cy}, // UP <- WHITE
+        {iX+1*cx, iY+1*cy}, // DOWN <- YELLOW 
+        {iX+2*cx, iY}, // RIGHT <- RED
+        {iX, iY} // LEFT <- ORANGE
+    };
 
-    int iX = 0, iY = 1;
-    mvprintw(iY, iX, "choose your action: ");
-
-    mvprintw(iY, iX, "choose your action: ");
-    mvprintw(iY + 3, iX, "r: turn right\tl: turn left\tf: flip\tq: quit");
-    // refreshes the screen to match what's in memory 
-    refresh();
-
-    switch (choice){
-        case 'r':
-            turn_face(cube, 1, face);
-        case 'l':
-            turn_face(cube, 3, face);
-        case 'f':
-            turn_face(cube, 2, face);
-        case 'q':
-            endwin();
-            clear();
-            break;
-        default:
-            turn_interface_2(cube, getch(), face);
-            break;
+    T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT};
+    // We choose the side to display in a variable
+    for (int k = 0; k < 6; k++){
+        T_SIDE side = list_of_sides[k];
+        // Then we can display that side
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                char *a = get_char_color(cube[select_side(side)][i][j]);
+                attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
+                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j*2, a);
+            }
+        }
     }
-}
-
-void turn_interface_1(T_COLOR ***cube, int side){
-    clear();
-    initscr();
-
-    int iX = 0, iY = 1;
-    mvprintw(iY, iX, "choose the face you want to turn: ");
-    mvprintw(iY + 3, iX, "f: front\tb: back\tu: up\td: down\tr: right\tl: left\tq: quit");
-    // refreshes the screen to match what's in memory 
-    refresh();
-
-    switch (side){
-        case 'f':
-            turn_interface_2(cube, 'o', side);
-        case 'b':
-            turn_interface_2(cube, 'o', side);
-        case 'u':
-            turn_interface_2(cube, 'o', side);
-        case 'd':
-            turn_interface_2(cube, 'o', side);
-        case 'r':
-            turn_interface_2(cube, 'o', side);
-        case 'l':
-            turn_interface_2(cube, 'o', side);
-        case 'q':
-            endwin();
-            clear();
-            break;
-        default:
-            turn_interface_1(cube, getch());
-            break;
-    }
-}
-
-void user_interface(T_COLOR ***cube, int a){
-    clear();
-    initscr();
-
-    int iX = 5, iY = LINES/2 - 5;
-    mvprintw(iY - 1, iX, "----------------------------------------------------------------------------------------------------------------------------------------------");
-    mvprintw(iY, iX, "What Do You Want TO DO:");
-    mvprintw(iY + 3, iX, "s: Scramble\tr: Reset\tb: Blank\t f: Fill\td: Display\tq: Quit\t\tt: turn face");
-    mvprintw(iY+5, iX, "----------------------------------------------------------------------------------------------------------------------------------------------");
-    // refreshes the screen to match what's in memory 
-    refresh();
-
+    iX += 30;
+    iY -= 2;
+    attron(COLOR_PAIR(3));
+    mvprintw(iY+0, iX,    "@-------------------------------------------------------------------------@");
+    mvprintw(iY+1, iX,    "(                       What Do You Want to do ??????????                 )");
+    mvprintw(iY+2, iX,    "(                                                                         )");
+    mvprintw(iY+3, iX,    "(             s: Scramble        b: Blank        f: Fill                  )");
+    mvprintw(iY+4, iX,    "(             q: Quit            r: Reset        t: turn face             )");
+    mvprintw(iY+5, iX,    "@-------------------------------------------------------------------------@");
     switch (a){
         case 'r':
             init_rubiks(cube);
-            user_interface(cube, 'd');
+            display_rubiks(cube, getch());
         case 'b':
             blank_rubiks(cube);
-            user_interface(cube, 'd');
+            display_rubiks(cube, getch());
         case 'd':
-            display_rubiks(cube);
-            user_interface(cube, getch());
+            display_rubiks(cube, getch());
         case 'q':
             free_rubiks(cube);
             endwin();
             break;
         case 't':
             turn_face(cube, 1, FRONT);
-            user_interface(cube, 'd');
+            display_rubiks(cube, getch());
             // turn_interface_1(cube, 'o')
         case 'h':
             turn_face(cube, 1, RIGHT);
-            user_interface(cube, 'd');
+            display_rubiks(cube, getch());
         default:
-            user_interface(cube, getch());
+            display_rubiks(cube, getch());
     }
+    // refreshes the screen to match what's in memory 
+    refresh();
+    getch();
+    // what's for user input, returns 
+    endwin();
 }
