@@ -32,12 +32,12 @@ int select_side(T_SIDE side){
     return (int) a;
 }
 
-T_COLOR **create_2d_array(){
+T_COLOR **create_2d_array(int s){
     int i, j;
     T_COLOR **array;
     array = (T_COLOR**) malloc(3 * sizeof(T_COLOR**));
-    for (i = 0; i < 3; i++){
-        for (j = 0; j < 3; j++)
+    for (i = 0; i < s; i++){
+        for (j = 0; j < s; j++)
             array[i] = (T_COLOR*) malloc(3 * sizeof(T_COLOR*));
     }
     return array;
@@ -47,7 +47,7 @@ T_COLOR ***create_rubiks(){
     T_COLOR ***cube;
     cube = (T_COLOR***) malloc(6 * sizeof(T_COLOR***));
     for (int i = 0; i < 6; i++){
-        cube[i] = (T_COLOR**) create_2d_array();
+        cube[i] = (T_COLOR**) create_2d_array(3);
     }
     return cube;
 }
@@ -194,7 +194,6 @@ void turn_top(T_COLOR ***cube, T_SIDE side){
         }
     }
     */
-
     // capturing old values, hard code
 
     old_values[0][0] = cube[sd][0][0];
@@ -217,7 +216,6 @@ void turn_top(T_COLOR ***cube, T_SIDE side){
         }
     }
     */
-
     // placements, hard code
 
     cube[sd][0][0] = old_values[2][0];
@@ -237,34 +235,34 @@ void turn_top(T_COLOR ***cube, T_SIDE side){
 
 void turn_line(T_COLOR ***cube, T_SIDE side){
 
-    int a = select_side(side);
-    T_SIDE *sds;
-    sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
-    switch (a){
-        // ORDRE: {UP, RIGHT, DOWN, LEFT}
-        case 0: //COLOR NAME
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            break;
-        case 1:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-            break;
-        case 2:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-            break;
-        case 3:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            break;
-        case 4:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            break;
-        case 5:
-            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-            break;
+    // int a = select_side(side);
+    // T_SIDE *sds;
+    // sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
+    // switch (a){
+    //     // ORDRE: {UP, RIGHT, DOWN, LEFT}
+    //     case 0: //COLOR NAME
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+    //         break;
+    //     case 1:
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+    //         break;
+    //     case 2:
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+    //         break;
+    //     case 3:
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+    //         break;
+    //     case 4:
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+    //         break;
+    //     case 5:
+    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+    //         break;
 
-        default:
-            break;
-    }
-    T_COLOR old_values[10][10];
+    //     default:
+    //         break;
+    // }
+    // T_COLOR old_values[10][10];
 
     // capturing old values, soft code
 
@@ -284,6 +282,10 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     */
 
     // capturing old values, soft code
+    int sds[5] = {4, 2, 5, 3};
+    T_COLOR **old_values;
+    old_values = create_2d_array(4);
+
 
     old_values[0][0] = cube[sds[3]][0][0];
     old_values[0][1] = cube[sds[3]][0][1];
@@ -297,9 +299,6 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     old_values[2][1] = cube[sds[1]][2][1];
     old_values[2][2] = cube[sds[1]][2][2];
 
-    old_values[3][0] = cube[sds[2]][3][0];
-    old_values[3][1] = cube[sds[2]][3][1];
-    old_values[3][2] = cube[sds[2]][3][2];
     
 
     // placements, version soft code
@@ -342,15 +341,12 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     cube[sds[2]][0][1]  =   old_values[1][1];
     cube[sds[2]][0][2]  =   old_values[1][0];
 
-    cube[sds[3]][1][2]  =   old_values[2][0];
-    cube[sds[3]][2][2]  =   old_values[2][1];
-    cube[sds[3]][3][2]  =   old_values[2][2]; 
 }
 
 void turn_face(T_COLOR ***cube, int number_of_turns, T_SIDE side){
     for (int i = 0; i < number_of_turns; i++){
-        //turn_line(cube, side);
-        //turn_top(cube, side);
+        turn_line(cube, side);
+        // turn_top(cube, side);
     }
 }
 
@@ -375,7 +371,7 @@ void turn_interface_2(T_COLOR ***cube, char choice, char face){
     mvprintw(iY, iX, "choose your action: ");
 
     mvprintw(iY, iX, "choose your action: ");
-    mvprintw(iY + 3, iX, "r: turn right\tl: turn left\tf: flip");
+    mvprintw(iY + 3, iX, "r: turn right\tl: turn left\tf: flip\tq: quit");
     // refreshes the screen to match what's in memory 
     refresh();
 
@@ -386,7 +382,10 @@ void turn_interface_2(T_COLOR ***cube, char choice, char face){
             turn_face(cube, 3, face);
         case 'f':
             turn_face(cube, 2, face);
-
+        case 'q':
+            endwin();
+            clear();
+            break;
         default:
             turn_interface_2(cube, getch(), face);
             break;
@@ -399,7 +398,7 @@ void turn_interface_1(T_COLOR ***cube, int side){
 
     int iX = 0, iY = 1;
     mvprintw(iY, iX, "choose the face you want to turn: ");
-    mvprintw(iY + 3, iX, "f: front\tb: back\tu: up\td: down\tr: right\tl: left");
+    mvprintw(iY + 3, iX, "f: front\tb: back\tu: up\td: down\tr: right\tl: left\tq: quit");
     // refreshes the screen to match what's in memory 
     refresh();
 
@@ -416,6 +415,10 @@ void turn_interface_1(T_COLOR ***cube, int side){
             turn_interface_2(cube, 'o', side);
         case 'l':
             turn_interface_2(cube, 'o', side);
+        case 'q':
+            endwin();
+            clear();
+            break;
         default:
             turn_interface_1(cube, getch());
             break;
@@ -445,12 +448,13 @@ void user_interface(T_COLOR ***cube, int a){
             display_rubiks(cube);
             user_interface(cube, getch());
         case 'q':
-            // could create a function for a good bye screen
             free_rubiks(cube);
             endwin();
             break;
         case 't':
-            turn_interface_1(cube, 'o');
+            turn_face(cube, 1, FRONT);
+            user_interface(cube, 'd');
+            // turn_interface_1(cube, 'o');
         default:
             user_interface(cube, getch());
     }
