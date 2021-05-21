@@ -1,26 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <curses.h>
-#include <string.h>
+#include <time.h>
+#include <math.h>
 
-typedef enum{ 
-    FRONT, // 0
-    BACK, // 1
-    UP, // 2
-    DOWN, // 3 
-    RIGHT, // 4 
-    LEFT // 5
-}T_SIDE;
-
-typedef enum{
-    G,
-    B,
-    W,
-    Y,
-    R,
-    O,
-    LG
-}T_COLOR;
+typedef enum{/*0*/FRONT, /*1*/BACK, /*2*/UP, /*3*/DOWN, /*4*/RIGHT, /*5*/LEFT}T_SIDE;
+typedef enum{G, B, W, Y, R, O, LG}T_COLOR;
 
 int select_color(T_COLOR color){
     T_COLOR a = color;
@@ -241,11 +226,10 @@ void horizontal_rotation(T_COLOR ***cube){
 }
 
 void scramble(T_COLOR ***cube){
-    time_t t;
-    srand((unsigned) time(&t));
+    srand((unsigned)time(NULL)); // Initialization, should only be called once.
     int k = rand()%8 + 4;
 
-    for (int i; i < k; i++){
+    for (int i = 0; i < k; i++){
         vertical_rotation(cube);
         pivot_face(cube, FRONT);
         horizontal_rotation(cube);
