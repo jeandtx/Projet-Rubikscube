@@ -4,12 +4,12 @@
 #include <string.h>
 
 typedef enum{ 
-    FRONT,
-    BACK, 
-    UP, 
-    DOWN, 
-    RIGHT, 
-    LEFT 
+    FRONT, // 0
+    BACK, // 1
+    UP, // 2
+    DOWN, // 3 
+    RIGHT, // 4 
+    LEFT // 5
 }T_SIDE;
 
 typedef enum{
@@ -235,35 +235,34 @@ void turn_top(T_COLOR ***cube, T_SIDE side){
 
 void turn_line(T_COLOR ***cube, T_SIDE side){
 
-    // int a = select_side(side);
-    // T_SIDE *sds;
-    // sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
-    // switch (a){
-    //     // ORDRE: {UP, RIGHT, DOWN, LEFT}
-    //     case 0: //COLOR NAME
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-    //         break;
-    //     case 1:
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-    //         break;
-    //     case 2:
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
-    //         break;
-    //     case 3:
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-    //         break;
-    //     case 4:
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-    //         break;
-    //     case 5:
-    //         sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
-    //         break;
-
-    //     default:
-    //         break;
-    // }
-    // T_COLOR old_values[10][10];
-
+    int a = select_side(side);
+    T_SIDE *sds;
+    sds = (T_SIDE*) malloc(4*sizeof(T_SIDE));
+    switch (a){
+        // ORDRE: {UP, RIGHT, DOWN, LEFT}
+        case 0: // OK
+            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) RIGHT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) LEFT;
+            break;
+        case 1: // NO OK
+            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+            break;
+        case 2: // NO OK
+            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) LEFT; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) RIGHT;
+            break;
+        case 3: // NO OK
+            sds[0] = (T_SIDE) LEFT; sds[1] = (T_SIDE) FRONT; sds[2] = (T_SIDE) RIGHT; sds[3] = (T_SIDE) BACK;
+            break;
+        case 4: // OK
+            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) BACK; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) FRONT;
+            break;
+        case 5: // OK
+            sds[0] = (T_SIDE) UP; sds[1] = (T_SIDE) BACK; sds[2] = (T_SIDE) DOWN; sds[3] = (T_SIDE) FRONT;
+            break;
+// 
+        default:
+            break;
+    }
+// 
     // capturing old values, soft code
 
     /*
@@ -282,24 +281,24 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     */
 
     // capturing old values, soft code
-    int sds[5] = {4, 2, 5, 3};
     T_COLOR **old_values;
     old_values = create_2d_array(4);
 
+    old_values[0][0] = cube[sds[0]][0][0];
+    old_values[0][1] = cube[sds[0]][0][1];
+    old_values[0][2] = cube[sds[0]][0][2];
+    
+    old_values[1][0] = cube[sds[1]][0][1];
+    old_values[1][1] = cube[sds[1]][1][1];
+    old_values[1][2] = cube[sds[1]][2][1];
+    
+    old_values[2][0] = cube[sds[2]][2][0];
+    old_values[2][1] = cube[sds[2]][2][1];
+    old_values[2][2] = cube[sds[2]][2][2];
 
-    old_values[0][0] = cube[sds[3]][0][0];
-    old_values[0][1] = cube[sds[3]][0][1];
-    old_values[0][2] = cube[sds[3]][0][2];
-    
-    old_values[1][0] = cube[sds[0]][1][0];
-    old_values[1][1] = cube[sds[0]][1][1];
-    old_values[1][2] = cube[sds[0]][1][2];
-    
-    old_values[2][0] = cube[sds[1]][2][0];
-    old_values[2][1] = cube[sds[1]][2][1];
-    old_values[2][2] = cube[sds[1]][2][2];
-
-    
+    old_values[3][0] = cube[sds[3]][2][0];
+    old_values[3][1] = cube[sds[3]][2][1];
+    old_values[3][2] = cube[sds[3]][2][2];
 
     // placements, version soft code
 
@@ -340,6 +339,10 @@ void turn_line(T_COLOR ***cube, T_SIDE side){
     cube[sds[2]][0][0]  =   old_values[1][2];
     cube[sds[2]][0][1]  =   old_values[1][1];
     cube[sds[2]][0][2]  =   old_values[1][0];
+
+    cube[sds[3]][0][2]  =   old_values[2][0];
+    cube[sds[3]][1][2]  =   old_values[2][1];
+    cube[sds[3]][2][2]  =   old_values[2][2];
 
 }
 
@@ -452,7 +455,7 @@ void user_interface(T_COLOR ***cube, int a){
             endwin();
             break;
         case 't':
-            turn_face(cube, 1, FRONT);
+            turn_face(cube, 1, BACK);
             user_interface(cube, 'd');
             // turn_interface_1(cube, 'o');
         default:
