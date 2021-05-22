@@ -1,4 +1,4 @@
-># Projet Report Rubikscube
+# Projet Report Rubikscube
 ## Welcome
 Welcome 🤗 in our github project ! <br>
 You'll find the progression of the code in [commits](https://github.com/jeandtx/Projet-Rubikscube/commits/main).
@@ -47,7 +47,7 @@ We also tried to produce code to pivot any face, but it appeared that this feat 
 > ##### we could not find an universal algorithm (each face turn would have its own function
 <br>
 
-A final issue that we encountered were coding together, in viso.. But we closed it quite fast because we knew tools like [Live Share](https://visualstudio.microsoft.com/fr/services/live-share/) on VS code or [github](https://github.com) a version control manager.
+A final issue that we encountered were coding together, in viso.. But we closed it quite fast because we knew tools like [Live Share](https://visualstudio.microsoft.com/fr/services/live-share/) on VS code or [github](https://github.com/home) a version control manager.
 <br>
 <br>
 
@@ -56,9 +56,7 @@ A final issue that we encountered were coding together, in viso.. But we closed 
 ### In this project, we learned how to : 
 * work as a team 🤝
   * ##### we extensively used the liveshare functions of VS code, as well as Discord's screenshares and audio calls.
-* use git and github !
-<img width="35" alt="Github" src="https://user-images.githubusercontent.com/75331707/119240715-d843d000-bb51-11eb-95ce-2ded55f55529.png">
-
+* use git and github ! <img width="30" alt="Github" src="https://user-images.githubusercontent.com/75331707/119240715-d843d000-bb51-11eb-95ce-2ded55f55529.png">
   * ##### with numerous commits, pulls & pushes to the main git branch. 
 * make algorithms before blindly coding 👨🏽‍🦯
   * ##### by making the mistake, a lot of times. Finally we mastered the use of VS code's whiteboard, allowing us to visualy represent our algorithms.
@@ -76,5 +74,5 @@ For the next project:
 
 
 ## Contributors 🦾
-* Oscar Byrne (@osbyrne)
-* Jean Doutriaux (@jeandtx)
+* [Oscar Byrne](https://github.com/osbyrne)
+* [Jean Doutriaux](https://github.com/jeandtx)
