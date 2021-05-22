@@ -8,7 +8,10 @@ typedef enum{/*0*/FRONT, /*1*/BACK, /*2*/UP, /*3*/DOWN, /*4*/RIGHT, /*5*/LEFT}T_
 typedef enum{G, B, W, Y, R, O, LG}T_COLOR;
 
 int select_color(T_COLOR color){
-    T_COLOR a = color;
+    /* This function take a color as input a return the integer position of this color */
+
+the typedef 
+            T_COLOR a = color;
     return (int) a;
 }
 
@@ -18,6 +21,7 @@ int select_side(T_SIDE side){
 }
 
 T_COLOR **create_2d_array(int s){
+    /* This function is used to get a 2D array */
     int i, j;
     T_COLOR **array;
     array = (T_COLOR**) malloc(3 * sizeof(T_COLOR**));
@@ -29,6 +33,7 @@ T_COLOR **create_2d_array(int s){
 }
 
 T_COLOR ***create_rubiks(){
+    /* By using the create_2d_array multiple times we get a 3D array */
     T_COLOR ***cube;
     cube = (T_COLOR***) malloc(6 * sizeof(T_COLOR***));
     for (int i = 0; i < 6; i++){
@@ -38,6 +43,7 @@ T_COLOR ***create_rubiks(){
 }
 
 void init_rubiks(T_COLOR ***cube){
+    /* This function take a cube as parameter and fill each side with each color */
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
@@ -87,31 +93,20 @@ void pivot_face(T_COLOR ***cube, T_SIDE side){
 
     // capturing old values, hard code
 
-    old_val[0][0] = cube[side][0][0];
-    old_val[0][1] = cube[side][0][1];
-    old_val[0][2] = cube[side][0][2];
-
-    old_val[1][0] = cube[side][1][0];
-    old_val[1][1] = cube[side][1][1];
-    old_val[1][2] = cube[side][1][2];
-
-    old_val[2][0] = cube[side][2][0];
-    old_val[2][1] = cube[side][2][1];
-    old_val[2][2] = cube[side][2][2];
+    for (int i=0; i<3; i++){
+        for (int j=0; j<3; j++){
+            old_val[i][j] = cube[side][i][j];
+        }
+    }
 
     // placements, hard code
 
-    cube[side][0][0] = old_val[2][0];
-    cube[side][0][1] = old_val[1][0];
-    cube[side][0][2] = old_val[0][0];
 
-    cube[side][1][0] = old_val[2][1];
-    cube[side][1][1] = old_val[1][1];
-    cube[side][1][2] = old_val[0][1];
-
-    cube[side][2][0] = old_val[2][2];
-    cube[side][2][1] = old_val[1][2];
-    cube[side][2][2] = old_val[0][2];
+    for (int i=0; i<3; i++){
+        for (int j=0; j<3; j++){
+            cube[side][i][j] = old_val[2-i][j];
+        }
+    }
 }
 
 void turn_line(T_COLOR ***cube){
@@ -196,31 +191,34 @@ void vertical_rotation(T_COLOR ***cube){
 }
 
 void horizontal_rotation(T_COLOR ***cube){
+    
     T_COLOR **storage_side;
     storage_side = create_2d_array(3);
 
     for (int i=0; i<3; i++){pivot_face(cube, UP);}
     pivot_face(cube, DOWN);
 
-    int list_of_sides[5] = {5, 1, 4, 0};
+    int list_sds[5] = {5, 1, 4, 0};
     // we store the first side
     for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
-            storage_side[j][k] = cube[list_of_sides[0]][j][k];
+            storage_side[j][k] = cube[list_sds[0]][j][k];
         }
     }
+
     // we transfer each side in the previous one
     for(int side = 0; side < 3; side++){
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
-                cube[list_of_sides[side]][j][k] = cube[list_of_sides[side+1]][j][k];
+                cube[list_sds[side]][j][k] = cube[list_sds[side+1]][j][k];
             }
         }
     }
+
     // we transfer the last side from the storage
     for (int j = 0; j < 3; j++){
         for (int k = 0; k < 3; k++){
-            cube[list_of_sides[3]][j][k] = storage_side[2-j][k];
+            cube[list_sds[3]][j][k] = storage_side[2-j][k];
         }
     }
 }
