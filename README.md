@@ -20,12 +20,22 @@ Using these two functions, we can make any face become the front face. Then, we 
 Since any movement is a combination of turning the cube vertically, horizontally and turning the front face,
 > We only need three movements to generate all other movements of the cube !<br>
 
+## Algorithmics 🧠
 
+### Turning a face :<br>
+When turning a face, we have to rotate a square of nine blocks by a quarter of a turn in the clockwise direction.
+To perform this action, we can first copy the values of these nine squares into a 2D array.<br>
+Then, we manually map out where they should be placed in the new, rotated face.<br>
+We paste the saved blocks into their new place in the selected face.<br> 
+To make the code look prettier, we find patterns in the copying and pasting processes,<br> and emulate them using 'for loops'.
+##### note that we couldn't achieve a similar result when turning the crown (blocks adjascent to the rotated face that circle around it).
+
+### Horizontally turning the cube<br>
 
  
 ## Our product 📦
 
-the rubiks cube appears as a colored patron
+The rubiks cube appears as a colored patron
 ##### (the orange side will be represented in purple)
 
 On the right side of the patron, a box appears and demands you make a wish 🧚🏽‍♀️<br> 
