@@ -9,9 +9,7 @@ typedef enum{G, B, W, Y, R, O, LG}T_COLOR;
 
 int select_color(T_COLOR color){
     /* This function take a color as input a return the integer position of this color */
-
-the typedef 
-            T_COLOR a = color;
+    T_COLOR a = color;
     return (int) a;
 }
 
