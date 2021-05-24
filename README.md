@@ -8,7 +8,22 @@ You'll find the progression of the code in [commits](https://github.com/jeandtx/
 The full program is divided in only two files:
 * The [main.c](https://github.com/jeandtx/Projet-Rubikscube/blob/main/main.c) which create the rubikscube and diplay the user interface
 * The [pack.h](https://github.com/jeandtx/Projet-Rubikscube/blob/main/pack.h) which is a header file implement in main.c and who contain all our functions and structure definitions. <br><br>
-## Our product
+
+the cube is represented as an array of faces, which are an array of lines, which are an array of colored squares.
+This makes it a 3D array.<br>
+In this configuration, turning the front face of the cube requires a different algorithm than turning the right or up faces of the cube. Making all these algorithms would require a lot of code.<br>
+Instead, we decided to use functions already built : <br>
+* turning the cube horizontally<br>
+* turning the cube vertically<br>
+
+Using these two functions, we can make any face become the front face. Then, we can use the "turn front face" function, and flip the cube back ✨<br><br>
+Since any movement is a combination of turning the cube vertically, horizontally and turning the front face,
+> We only need three movements to generate all other movements of the cube !<br>
+
+
+
+ 
+## Our product 📦
 
 the rubiks cube appears as a colored patron
 ##### (the orange side will be represented in purple)
