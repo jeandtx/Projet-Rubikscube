@@ -290,6 +290,7 @@ void display_rubiks(T_COLOR ***cube, int a){
             }
         }
     }
+        
     x += 30;
     y -= 3;
     attron(COLOR_PAIR(color_to_int("white")));
