@@ -21,6 +21,7 @@ int select_side(T_SIDE side){
     However the compilator is already doing this job when we put a type side as index of a list
     So this function is sometimes used and sometimes we forgot to did it*/
     T_SIDE a = side;
+    return (int) a;
 }
 
 T_COLOR **create_2d_array(int s){
@@ -50,8 +51,8 @@ void init_rubiks(T_COLOR ***cube, char *color){
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
-                if (color == "blank"){cube[i][j][k] = LG;}
-                else if(color == "color"){cube[i][j][k] = (T_COLOR) i;}
+                if (strcmp(color, "blank") == 0){cube[i][j][k] = (T_COLOR) LG;}
+                else if(strcmp(color, "color") == 0){cube[i][j][k] = (T_COLOR) i;}
             }
         }
     }
@@ -248,6 +249,7 @@ int color_to_int(char* color){
     if (strcmp(color, "yellow")     == 0){return 4;}
     if (strcmp(color, "red")        == 0){return 5;}
     if (strcmp(color, "magenta")    == 0){return 6;}
+    return 0;
 }
 
 void display_rubiks(T_COLOR ***cube, int a){
@@ -266,6 +268,7 @@ void display_rubiks(T_COLOR ***cube, int a){
     init_pair(4, COLOR_YELLOW,  COLOR_BLACK);
     init_pair(5, COLOR_RED,     COLOR_BLACK);
     init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(7, COLOR_BLACK, COLOR_WHITE);
     int x = LINES/10, y = COLS/25, cx = 7, cy = 4;
     
     int position_by_side[10][5] = {
@@ -293,14 +296,14 @@ void display_rubiks(T_COLOR ***cube, int a){
         
     x += 30;
     y -= 3;
-    attron(COLOR_PAIR(color_to_int("white")));
+    attron(COLOR_PAIR(3));
     mvprintw(y-1, x,    " __________________________________________________________________________" );
     mvprintw(y+0, x,    "@                                                                          @");
     mvprintw(y+1, x,    "|                      What Do You Want to do ??????????                   |");
     mvprintw(y+2, x,    "|                                                                          |");
     mvprintw(y+3, x,    "|             s: Scramble        b: Blank        f: Fill                   |");
     mvprintw(y+4, x,    "|             q: Quit            r: Reset        t: pivot front face       |");
-    mvprintw(y+5, x,    "|             turn cube :        h: Horizontaly  v: Verticaly              |");
+    mvprintw(y+5, x,    "|             turn cube :        h: Horizontally v: Vertically             |");
     mvprintw(y+6, x,    "|                                                                          |");
     mvprintw(y+7, x,    "|                 press enter after choosing the wright cmd                |");
     mvprintw(y+8, x,    "@__________________________________________________________________________@");
