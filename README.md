@@ -4,8 +4,8 @@ Welcome 🤗 in our github project ! <br>
 You'll find the progression of the code in [commits](https://github.com/jeandtx/Projet-Rubikscube/commits/main).
 <br><br>
 
-## The code
-The full program 👨‍💻 is divided in only two files:
+## The code 👨‍💻
+The full program is divided in only two files:
 * The [main.c](https://github.com/jeandtx/Projet-Rubikscube/blob/main/main.c) which create the rubikscube and diplay the user interface
 * The [pack.h](https://github.com/jeandtx/Projet-Rubikscube/blob/main/pack.h) which is a header file implement in main.c and who contain all our functions and structure definitions. <br><br>
 ## Our product
