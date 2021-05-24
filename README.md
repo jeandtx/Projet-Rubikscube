@@ -30,12 +30,20 @@ We paste the saved blocks into their new place in the selected face.<br>
 To make the code look prettier, we find patterns in the copying and pasting processes and emulate them using 'for loops'.
 ##### note that we couldn't achieve a similar result when turning the crown (blocks adjascent to the rotated face that circle around it).<br><br><br>
 
-### Horizontally turning the cube<br>
-This process consists of two steps :<br>
+### Turning the cube<br>
+The process for turning the cube horizontally consists of two steps :<br>
 * rotating the ring of horizontal faces
 * turning the upper and lower faces<br>
 
 First, we need to replace each face by the one on its left : <br>
+
+
+<img width="1060" alt="whiteboard2" src="https://user-images.githubusercontent.com/68084397/119356123-5f09c180-bca6-11eb-81b4-8490b1d77985.png">
+And then we can turn the upper and lower faces, using the previously explicited "rotate face" algorithm".<br><br>
+
+The process for turning the cube vertically is not significantly different :<br>
+we just have to flip the horizontal layout of the blocks on the face that are going from up to back and from back to down.
+
 
 
 <br><br>
