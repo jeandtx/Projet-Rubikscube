@@ -252,6 +252,90 @@ int color_to_int(char* color){
     return 0;
 }
 
+void fill(T_COLOR ***cube){
+    
+    /*
+    This function is the display function for the rubiks and the menu. In the diplay function we use the librairy
+    curses.h which use the terminal as a window. 
+    This allow us to get colors for each letter. And we diplay the menu which is a switch
+    with getch as variable. Getch is a function from curses to get the pressed key board
+    */
+    clear();
+    initscr();
+    start_color();
+    init_pair(7, COLOR_BLACK, COLOR_WHITE);
+    int x = LINES/10, y = COLS/25, cx = 7, cy = 4;
+    
+    int position_by_side[10][5] = {
+        {x+1*cx, y}, // FRONT <- GREEN
+        {x+3*cx, y}, // BACK <- BLUE
+        {x+1*cx, y-1*cy}, // UP <- WHITE
+        {x+1*cx, y+1*cy}, // DOWN <- YELLOW 
+        {x+2*cx, y}, // RIGHT <- RED
+        {x, y} // LEFT <- ORANGE
+    };
+
+    x += 30;
+    y -= 3;
+    attron(COLOR_PAIR(3));
+    mvprintw(y-1, x,    " __________________________________________________________________________" );
+    mvprintw(y+0, x,    "@                 Careful the program don't check answers                  @");
+    mvprintw(y+1, x,    "|                        Pleas fill the RubiksCube                         |");
+    mvprintw(y+2, x,    "|                                                                          |");
+    mvprintw(y+3, x,    "|             r: Red             b: Blue         g: Green                  |");
+    mvprintw(y+4, x,    "|             o: Orange          w: White        y: Yellow                 |");
+    mvprintw(y+5, x,    "|                                                                          |");
+    mvprintw(y+6, x,    "|                      Don't press enter or blank                          |");
+    mvprintw(y+8, x,    "@__________________________________________________________________________@");
+
+    T_SIDE list_of_sides[10] =  {FRONT, BACK, UP, DOWN, RIGHT, LEFT};
+    // We choose the side to display in a variable
+    for (int k = 0; k < 6; k++){
+        T_SIDE side = list_of_sides[k];
+        // Then we can display that side
+        for (int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                char *a = get_char_color(cube[select_side(side)][i][j]);
+                attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
+                switch (getch()){
+                    case 'r':
+                        cube[select_side(side)][i][j] = (T_COLOR) R;
+                        break;
+                    case 'b':
+                        cube[select_side(side)][i][j] = (T_COLOR) B;
+                        break;
+                    case 'g':
+                        cube[select_side(side)][i][j] = (T_COLOR) G;
+                        break;
+                    case 'o':
+                        cube[select_side(side)][i][j] = (T_COLOR) O;
+                        break;
+                    case 'w':
+                        cube[select_side(side)][i][j] = (T_COLOR) W;
+                        break;
+                    case 'y':
+                        cube[select_side(side)][i][j] = (T_COLOR) Y;
+                        break;
+                    default:
+                        cube[select_side(side)][i][j] = (T_COLOR) LG;
+                        break;
+
+    }
+                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j*2, a);
+            }
+        }
+    }
+        
+    
+
+    
+    // refreshes the screen to match what's in memory 
+    refresh();
+    getch();
+    // what's for user input, returns 
+    endwin();
+}
+
 void display_rubiks(T_COLOR ***cube, int a){
     /*
     This function is the display function for the rubiks and the menu. In the diplay function we use the librairy
@@ -330,6 +414,10 @@ void display_rubiks(T_COLOR ***cube, int a){
             display_rubiks(cube, getch());
         case 's':
             scramble(cube);
+            display_rubiks(cube, getch());
+        case 'f':
+            init_rubiks(cube, "blank");
+            fill(cube);
             display_rubiks(cube, getch());
         default:
             display_rubiks(cube, getch());
