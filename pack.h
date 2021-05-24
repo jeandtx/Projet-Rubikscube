@@ -3,23 +3,28 @@
 #include <curses.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 
 typedef enum{/*0*/FRONT, /*1*/BACK, /*2*/UP, /*3*/DOWN, /*4*/RIGHT, /*5*/LEFT}T_SIDE;
 typedef enum{G, B, W, Y, R, O, LG}T_COLOR;
 
 int select_color(T_COLOR color){
-    /* This function take a color as input a return the integer position of this color */
+    // returns a number associated with the given T_COLOR
+    // not sure if its necessary though
+    // but we'll take no chances with that damned compilator
     T_COLOR a = color;
     return (int) a;
 }
 
 int select_side(T_SIDE side){
+    /* This is one asked function wich take side as argument and return the side's number
+    However the compilator is already doing this job when we put a type side as index of a list
+    So this function is sometimes used and sometimes we forgot to did it*/
     T_SIDE a = side;
-    return (int) a;
 }
 
 T_COLOR **create_2d_array(int s){
-    /* This function is used to get a 2D array */
+    // This function is used to get a 2D array
     int i, j;
     T_COLOR **array;
     array = (T_COLOR**) malloc(3 * sizeof(T_COLOR**));
@@ -31,7 +36,7 @@ T_COLOR **create_2d_array(int s){
 }
 
 T_COLOR ***create_rubiks(){
-    /* By using the create_2d_array multiple times we get a 3D array */
+    // By using the create_2d_array multiple times we get a 3D array
     T_COLOR ***cube;
     cube = (T_COLOR***) malloc(6 * sizeof(T_COLOR***));
     for (int i = 0; i < 6; i++){
@@ -40,12 +45,13 @@ T_COLOR ***create_rubiks(){
     return cube;
 }
 
-void init_rubiks(T_COLOR ***cube){
-    /* This function take a cube as parameter and fill each side with each color */
+void init_rubiks(T_COLOR ***cube, char *color){
+    // This function take a cube as parameter and fill each side with each color
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
-                cube[i][j][k] = (T_COLOR) i;
+                if (color == "blank"){cube[i][j][k] = LG;}
+                else if(color == "color"){cube[i][j][k] = (T_COLOR) i;}
             }
         }
     }
@@ -60,21 +66,12 @@ char *get_char_color(T_COLOR input){
     else if (input == W){return "W ";}
     else if (input == Y){return "Y ";}
     else if (input == O){return "O ";}
-    else if (input == LG){return "\\";}
+    else if (input == LG){return "+";}
     else{printf("\nerror in function get_char_color\n\n");return "a";}
 }
 
-void blank_rubiks(T_COLOR ***cube){
-    for (int i = 0; i < 6; i++){
-        for (int j = 0; j < 3; j++){
-            for (int k = 0; k < 3; k++){
-                cube[i][j][k] = LG;
-            }
-        }
-    }
-}
-
 void free_rubiks(T_COLOR ***cube){
+    // this frees all memory used by the cube
     for (int i = 0; i < 6; i++){
         for (int j = 0; j < 3; j++){
             free(cube[i][j]);
@@ -85,21 +82,19 @@ void free_rubiks(T_COLOR ***cube){
 }
 
 void pivot_face(T_COLOR ***cube, T_SIDE side){
+    // makes the front face rotate clockwise by a quarter of a turn
     
     T_COLOR **old_val;
     old_val = create_2d_array(4);
 
-    // capturing old values, hard code
-
+    // capturing old values
     for (int i=0; i<3; i++){
         for (int j=0; j<3; j++){
             old_val[i][j] = cube[side][i][j];
         }
     }
 
-    // placements, hard code
-
-
+    // placements
     for (int i=0; i<3; i++){
         for (int j=0; j<3; j++){
             cube[side][i][j] = old_val[2-i][j];
@@ -108,6 +103,10 @@ void pivot_face(T_COLOR ***cube, T_SIDE side){
 }
 
 void turn_line(T_COLOR ***cube){
+    /* For this function we didn't find an opimize algorithm because of the time.
+    So it save each lines of the 4 around face from front. And copy them to their new location
+    This function is working only at her first call. After it, it either forget some or add more colors 
+    As explained in Issue #4 in our github.*/
 
     T_COLOR **old_val;
     old_val = create_2d_array(4);
@@ -151,6 +150,7 @@ void turn_line(T_COLOR ***cube){
 }
 
 void turn_face_and_line(T_COLOR ***cube, int number_of_turns){
+    /* This function was created to make clockwise and anti clockwise by turning either 1 time or 3 times*/
     for (int i = 0; i < number_of_turns; i++){
         turn_line(cube);
         pivot_face(cube, FRONT);
@@ -158,6 +158,9 @@ void turn_face_and_line(T_COLOR ***cube, int number_of_turns){
 }
 
 void vertical_rotation(T_COLOR ***cube){
+    /* This function is mooving the hole cube horizontaly by copying the first face in some memory. After
+    that it move the next one in the first one and so on. At the end the saved face is put on the last face
+    But the last one is inversed on vertical plane because back is inversed in the display*/
     for (int i=0; i<3; i++){pivot_face(cube, LEFT);}
     pivot_face(cube, RIGHT);
     
@@ -189,7 +192,8 @@ void vertical_rotation(T_COLOR ***cube){
 }
 
 void horizontal_rotation(T_COLOR ***cube){
-    
+    /* This function is mooving the hole cube horizontaly by copying the first face in some memory. After
+    that it move the next one in the first one and so on. At the end the saved face is put on the last face*/
     T_COLOR **storage_side;
     storage_side = create_2d_array(3);
 
@@ -221,28 +225,47 @@ void horizontal_rotation(T_COLOR ***cube){
     }
 }
 
-void scramble(T_COLOR ***cube){
-    srand((unsigned)time(NULL)); // Initialization, should only be called once.
-    int k = rand()%8 + 4;
+int aleatoire(int min, int max){
+    srand((unsigned)time(NULL));  // Initialization, should only be called once.
+    int a = rand()%(max-min) + min;
+    return a;
+}
 
-    for (int i = 0; i < k; i++){
+void scramble(T_COLOR ***cube){
+    /* This function is calling some function to moove the cube a randomly number of time
+    This actions can simulate what if someone scramble the cub*/
+    for (int i = 0; i < aleatoire(4, 8); i++){
         vertical_rotation(cube);
         pivot_face(cube, FRONT);
         horizontal_rotation(cube);
     }
 }
 
+int color_to_int(char* color){
+    if (strcmp(color, "green")      == 0){return 1;}
+    if (strcmp(color, "blue")       == 0){return 2;}
+    if (strcmp(color, "white")      == 0){return 3;} 
+    if (strcmp(color, "yellow")     == 0){return 4;}
+    if (strcmp(color, "red")        == 0){return 5;}
+    if (strcmp(color, "magenta")    == 0){return 6;}
+}
+
 void display_rubiks(T_COLOR ***cube, int a){
+    /*
+    This function is the display function for the rubiks and the menu. In the diplay function we use the librairy
+    curses.h which use the terminal as a window. 
+    This allow us to get colors for each letter. And we diplay the menu which is a switch
+    with getch as variable. Getch is a function from curses to get the pressed key board
+    */
     clear();
     initscr();
     start_color();
-    init_pair(1, COLOR_GREEN, COLOR_BLACK);
-    init_pair(2, COLOR_BLUE, COLOR_BLACK);
-    init_pair(3, COLOR_WHITE, COLOR_BLACK);
-    init_pair(4, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(1, COLOR_GREEN,   COLOR_BLACK);
+    init_pair(2, COLOR_BLUE,    COLOR_BLACK);
+    init_pair(3, COLOR_WHITE,   COLOR_BLACK);
+    init_pair(4, COLOR_YELLOW,  COLOR_BLACK);
+    init_pair(5, COLOR_RED,     COLOR_BLACK);
     init_pair(6, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(7, COLOR_BLACK, COLOR_WHITE); // This added color is only for the blanks rubikscube
     int x = LINES/10, y = COLS/25, cx = 7, cy = 4;
     
     int position_by_side[10][5] = {
@@ -269,23 +292,24 @@ void display_rubiks(T_COLOR ***cube, int a){
     }
     x += 30;
     y -= 3;
-    attron(COLOR_PAIR(3));
-    mvprintw(y-1, x,    " __________________________________________________________________________");
+    attron(COLOR_PAIR(color_to_int("white")));
+    mvprintw(y-1, x,    " __________________________________________________________________________" );
     mvprintw(y+0, x,    "@                                                                          @");
-    mvprintw(y+1, x,    "︴                      What Do You Want to do ??????????                  ︴");
-    mvprintw(y+2, x,    "︴                                                                         ︴");
-    mvprintw(y+3, x,    "︴             s: Scramble        b: Blank        f: Fill                  ︴");
-    mvprintw(y+4, x,    "︴             q: Quit            r: Reset        t: pivot front face      ︴");
-    mvprintw(y+5, x,    "︴             turn cube :        h: Horizontaly  v: Verticaly             ︴");
-    mvprintw(y+6, x,    "︴                                                                         ︴");
-    mvprintw(y+7, x,    "︴                 press enter after choosing the wright cmd               ︴");
+    mvprintw(y+1, x,    "|                      What Do You Want to do ??????????                   |");
+    mvprintw(y+2, x,    "|                                                                          |");
+    mvprintw(y+3, x,    "|             s: Scramble        b: Blank        f: Fill                   |");
+    mvprintw(y+4, x,    "|             q: Quit            r: Reset        t: pivot front face       |");
+    mvprintw(y+5, x,    "|             turn cube :        h: Horizontaly  v: Verticaly              |");
+    mvprintw(y+6, x,    "|                                                                          |");
+    mvprintw(y+7, x,    "|                 press enter after choosing the wright cmd                |");
     mvprintw(y+8, x,    "@__________________________________________________________________________@");
+
     switch (a){
         case 'r':
-            init_rubiks(cube);
+            init_rubiks(cube, "color");
             display_rubiks(cube, getch());
         case 'b':
-            blank_rubiks(cube);
+            init_rubiks(cube, "blank");
             display_rubiks(cube, getch());
         case 'q':
             free_rubiks(cube);
