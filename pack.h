@@ -237,7 +237,7 @@ void scramble(T_COLOR ***cube){
     This actions can simulate what if someone scramble the cub*/
     for (int i = 0; i < aleatoire(4, 8); i++){
         vertical_rotation(cube);
-        pivot_face(cube, FRONT);
+        pivot_face(cube, FRONT); // Unfortunately this function is causing troubles
         horizontal_rotation(cube);
     }
 }
