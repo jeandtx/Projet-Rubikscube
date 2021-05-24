@@ -27,11 +27,18 @@ When turning a face, we have to rotate a square of nine blocks by a quarter of a
 To perform this action, we can first copy the values of these nine squares into a 2D array.<br>
 Then, we manually map out where they should be placed in the new, rotated face.<br>
 We paste the saved blocks into their new place in the selected face.<br> 
-To make the code look prettier, we find patterns in the copying and pasting processes,<br> and emulate them using 'for loops'.
-##### note that we couldn't achieve a similar result when turning the crown (blocks adjascent to the rotated face that circle around it).
+To make the code look prettier, we find patterns in the copying and pasting processes and emulate them using 'for loops'.
+##### note that we couldn't achieve a similar result when turning the crown (blocks adjascent to the rotated face that circle around it).<br><br><br>
 
 ### Horizontally turning the cube<br>
+This process consists of two steps :<br>
+* rotating the ring of horizontal faces
+* turning the upper and lower faces<br>
 
+First, we need to replace each face by the one on its left : <br>
+
+
+<br><br>
  
 ## Our product 📦
 
