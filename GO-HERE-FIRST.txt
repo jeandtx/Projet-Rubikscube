@@ -1,5 +1,0 @@
-Hello, 
-This is our c project about Rubiks cube
-To found aour report, explanations, algorithms, code and absolutley everything.
-Please click on the following link:
-https://github.com/jeandtx/Projet-Rubikscube

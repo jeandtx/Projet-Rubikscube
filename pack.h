@@ -252,6 +252,10 @@ int color_to_int(char* color){
     return 0;
 }
 
+void check_fill(T_COLOR ***cube){
+    // Let's check if the branch is separate from the main
+}
+
 void fill(T_COLOR ***cube){
     
     /* The function fill is quite identic to the function display. 
