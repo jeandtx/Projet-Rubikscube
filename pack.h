@@ -253,7 +253,17 @@ int color_to_int(char* color){
 }
 
 void check_fill(T_COLOR ***cube){
-    // Let's check if the branch is separate from the main
+    int occ[7] = {0, 0, 0, 0, 0, 0, 0};
+    for (int i = 0; i < 6; i++)
+        for (int j = 0; j < 3; j++)
+            for (int k = 0; k < 3; k++)
+                occ[cube[i][j][k]]++;
+    int max = occ[0];
+    for (int i = 0; i < 6; i++)
+        if (max < occ[i])
+            max = occ[i];
+    if (max >= 10)
+        init_rubiks(cube, "color");
 }
 
 void fill(T_COLOR ***cube){
@@ -281,7 +291,7 @@ void fill(T_COLOR ***cube){
     y -= 3;
     attron(COLOR_PAIR(3));
     mvprintw(y-1, x,    " __________________________________________________________________________" );
-    mvprintw(y+0, x,    "@                 Careful the program don't check answers                  @");
+    mvprintw(y+0, x,    "@                                                                          @");
     mvprintw(y+1, x,    "|                        Pleas fill the RubiksCube                         |");
     mvprintw(y+2, x,    "|                                                                          |");
     mvprintw(y+3, x,    "|             r: Red             b: Blue         g: Green                  |");
@@ -297,6 +307,7 @@ void fill(T_COLOR ***cube){
         // Then we can display that side
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
+                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j*2, "");
                 char *a = get_char_color(cube[select_side(side)][i][j]);
                 attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
                 switch (getch()){
@@ -322,10 +333,10 @@ void fill(T_COLOR ***cube){
                         cube[select_side(side)][i][j] = (T_COLOR) LG;
                         break;
                 }
-                mvprintw(position_by_side[k][1] + i, position_by_side[k][0] + j*2, a);
             }
         }
     }
+    check_fill(cube);
 }
 
 void display_rubiks(T_COLOR ***cube, int a){
