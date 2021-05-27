@@ -74,9 +74,6 @@ char *get_char_color(T_COLOR input){
 void free_rubiks(T_COLOR ***cube){
     // this frees all memory used by the cube
     for (int i = 0; i < 6; i++){
-        for (int j = 0; j < 3; j++){
-            free(cube[i][j]);
-        }
         free(cube[i]);
     }
     free(cube);
@@ -104,8 +101,7 @@ void pivot_face(T_COLOR ***cube, T_SIDE side){
 }
 
 void turn_line(T_COLOR ***cube){
-    /* For this function we didn't find an opimize algorithm because of the time.
-    So it save each lines of the 4 around face from front. And copy them to their new location
+    /* This  save each lines of the 4 around face from front. And copy them to their new location
     This function is working only at her first call. After it, it either forget some or add more colors 
     As explained in Issue #4 in our github.*/
 
@@ -113,41 +109,20 @@ void turn_line(T_COLOR ***cube){
     old_val = create_2d_array(4);
 
     // getting the cube's values
-
-    old_val[0][0] = cube[UP][0][0];
-    old_val[0][1] = cube[UP][0][1];
-    old_val[0][2] = cube[UP][0][2];
-    
-    old_val[1][0] = cube[RIGHT][0][1];
-    old_val[1][1] = cube[RIGHT][1][1];
-    old_val[1][2] = cube[RIGHT][2][1];
-    
-    old_val[2][0] = cube[DOWN][2][0];
-    old_val[2][1] = cube[DOWN][2][1];
-    old_val[2][2] = cube[DOWN][2][2];
-
-    old_val[3][0] = cube[LEFT][2][0];
-    old_val[3][1] = cube[LEFT][2][1];
-    old_val[3][2] = cube[LEFT][2][2];
-
+    for (int i = 0; i < 3; i++){
+        old_val[0][i] = cube[UP][0][i];
+        old_val[1][i] = cube[RIGHT][i][1];
+        old_val[2][i] = cube[DOWN][2][i];
+        old_val[3][i] = cube[LEFT][2][i];
+    }
     // placements
 
-    cube[UP][2][0]    = old_val[3][2];
-    cube[UP][2][1]    = old_val[3][1];
-    cube[UP][2][2]    = old_val[3][0];
-
-    cube[RIGHT][0][0] = old_val[0][0];
-    cube[RIGHT][1][0] = old_val[0][1];
-    cube[RIGHT][2][0] = old_val[0][2];
-
-    cube[DOWN][0][0]  = old_val[1][2];
-    cube[DOWN][0][1]  = old_val[1][1];
-    cube[DOWN][0][2]  = old_val[1][0];
-
-    cube[LEFT][0][2]  = old_val[2][0];
-    cube[LEFT][1][2]  = old_val[2][1];
-    cube[LEFT][2][2]  = old_val[2][2];
-
+    for (int i = 0; i < 3; i++){
+        cube[UP][2][i] = old_val[3][i];
+        cube[RIGHT][i][0] = old_val[0][i];
+        cube[DOWN][0][i] = old_val[1][i];
+        cube[LEFT][i][2] = old_val[2][i];
+    }
 }
 
 void turn_face_and_line(T_COLOR ***cube, int number_of_turns){
@@ -313,21 +288,11 @@ void fill(T_COLOR ***cube){
                 switch (getch()){
                     case 'r': cube[select_side(side)][i][j] = (T_COLOR) R; break;
                     case 'b': cube[select_side(side)][i][j] = (T_COLOR) B; break;
-                    case 'g':
-                        cube[select_side(side)][i][j] = (T_COLOR) G;
-                        break;
-                    case 'o':
-                        cube[select_side(side)][i][j] = (T_COLOR) O;
-                        break;
-                    case 'w':
-                        cube[select_side(side)][i][j] = (T_COLOR) W;
-                        break;
-                    case 'y':
-                        cube[select_side(side)][i][j] = (T_COLOR) Y;
-                        break;
-                    default:
-                        cube[select_side(side)][i][j] = (T_COLOR) LG;
-                        break;
+                    case 'g': cube[select_side(side)][i][j] = (T_COLOR) G; break;
+                    case 'o': cube[select_side(side)][i][j] = (T_COLOR) O; break;
+                    case 'w': cube[select_side(side)][i][j] = (T_COLOR) W; break;
+                    case 'y': cube[select_side(side)][i][j] = (T_COLOR) Y; break;
+                    default: cube[select_side(side)][i][j] = (T_COLOR) LG; break;
                 }
             }
         }
@@ -391,39 +356,29 @@ void display_rubiks(T_COLOR ***cube, int a){
     mvprintw(y+3, x,    "|             s: Scramble        b: Blank        f: Fill                   |");
     mvprintw(y+4, x,    "|             q: Quit            r: Reset        t: pivot front face       |");
     mvprintw(y+5, x,    "|             turn cube :        h: Horizontally v: Vertically             |");
+    mvprintw(y+5, x,    "|                 a: anti-Horizontally   z: anti-Vertically                |");
     mvprintw(y+6, x,    "|                                                                          |");
     mvprintw(y+7, x,    "|                 press enter after choosing the wright cmd                |");
     mvprintw(y+8, x,    "@__________________________________________________________________________@");
 
     switch (a){
-        case 'r':
-            init_rubiks(cube, "color");
-            display_rubiks(cube, getch());
-        case 'b':
-            init_rubiks(cube, "blank");
-            display_rubiks(cube, getch());
-        case 'q':
-            free_rubiks(cube);
-            endwin();
-            break;
-        case 't':
-            turn_face_and_line(cube, 1);
-            display_rubiks(cube, getch());
-        case 'h':
-            horizontal_rotation(cube);
-            display_rubiks(cube, getch());
-        case 'v':
-            vertical_rotation(cube);
-            display_rubiks(cube, getch());
-        case 's':
-            scramble(cube);
-            display_rubiks(cube, getch());
-        case 'f':
-            init_rubiks(cube, "blank");
-            fill(cube);
-            display_rubiks(cube, getch());
-        default:
-            display_rubiks(cube, getch());
+        case 'r': init_rubiks(cube, "color"); display_rubiks(cube, getch());
+        case 'b': init_rubiks(cube, "blank"); display_rubiks(cube, getch());
+        case 'q': free_rubiks(cube); endwin(); break;
+        case 't': turn_face_and_line(cube, 1); display_rubiks(cube, getch());
+        case 'h': horizontal_rotation(cube); display_rubiks(cube, getch());
+        case 'v': vertical_rotation(cube); display_rubiks(cube, getch());
+        case 's': scramble(cube); display_rubiks(cube, getch());
+        case 'f': init_rubiks(cube, "blank"); fill(cube); display_rubiks(cube, getch()); 
+        case 'a':
+            for (int i = 0; i < 3; i++){
+                horizontal_rotation(cube);
+            }
+        case 'z':
+            for (int i = 0; i < 3; i++){
+                vertical_rotation(cube);
+            }
+        default: display_rubiks(cube, getch());
     }
     // refreshes the screen to match what's in memory 
     refresh();
