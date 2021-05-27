@@ -60,8 +60,7 @@ void init_rubiks(T_COLOR ***cube, char *color){
 
 char *get_char_color(T_COLOR input){
     // gets a T_COLOR type input, returns it as a character
-    if (input == R){
-        return "R ";}
+    if (input == R){return "R ";}
     else if (input == B){return "B ";}
     else if (input == G){return "G ";}
     else if (input == W){return "W ";}
@@ -356,10 +355,10 @@ void display_rubiks(T_COLOR ***cube, int a){
     mvprintw(y+3, x,    "|             s: Scramble        b: Blank        f: Fill                   |");
     mvprintw(y+4, x,    "|             q: Quit            r: Reset        t: pivot front face       |");
     mvprintw(y+5, x,    "|             turn cube :        h: Horizontally v: Vertically             |");
-    mvprintw(y+5, x,    "|                 a: anti-Horizontally   z: anti-Vertically                |");
-    mvprintw(y+6, x,    "|                                                                          |");
-    mvprintw(y+7, x,    "|                 press enter after choosing the wright cmd                |");
-    mvprintw(y+8, x,    "@__________________________________________________________________________@");
+    mvprintw(y+6, x,    "|                 a: anti-Horizontally   z: anti-Vertically                |");
+    mvprintw(y+7, x,    "|                                                                          |");
+    mvprintw(y+8, x,    "|                 press enter after choosing the wright cmd                |");
+    mvprintw(y+9, x,    "@__________________________________________________________________________@");
 
     switch (a){
         case 'r': init_rubiks(cube, "color"); display_rubiks(cube, getch());
