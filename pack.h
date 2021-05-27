@@ -47,12 +47,12 @@ T_COLOR ***create_rubiks(){
 }
 
 void init_rubiks(T_COLOR ***cube, char *color){
-    // This function take a cube as parameter and fill each side with each color
+    T_COLOR a = LG;
     for (int i = 0; i < 6; i++){
+        if (strcmp(color, "color") == 0){a = (T_COLOR) i;}
         for (int j = 0; j < 3; j++){
             for (int k = 0; k < 3; k++){
-                if (strcmp(color, "blank") == 0){cube[i][j][k] = (T_COLOR) LG;}
-                else if(strcmp(color, "color") == 0){cube[i][j][k] = (T_COLOR) i;}
+                cube[i][j][k] = a;
             }
         }
     }
@@ -311,12 +311,8 @@ void fill(T_COLOR ***cube){
                 char *a = get_char_color(cube[select_side(side)][i][j]);
                 attron(COLOR_PAIR(select_color(cube[select_side(side)][i][j]) + 1 ));
                 switch (getch()){
-                    case 'r':
-                        cube[select_side(side)][i][j] = (T_COLOR) R;
-                        break;
-                    case 'b':
-                        cube[select_side(side)][i][j] = (T_COLOR) B;
-                        break;
+                    case 'r': cube[select_side(side)][i][j] = (T_COLOR) R; break;
+                    case 'b': cube[select_side(side)][i][j] = (T_COLOR) B; break;
                     case 'g':
                         cube[select_side(side)][i][j] = (T_COLOR) G;
                         break;
@@ -337,6 +333,10 @@ void fill(T_COLOR ***cube){
         }
     }
     check_fill(cube);
+}
+
+void resolve_rubiks(T_COLOR ***cube){
+    
 }
 
 void display_rubiks(T_COLOR ***cube, int a){
